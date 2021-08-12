@@ -4,17 +4,16 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
 
-@Entity //User 클래스가 MySQL에 테이블이 생성된다.
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Entity //User 클래스가 MySQL에 테이블이 생성된다.
 public class User {
 
     @Id
@@ -30,8 +29,8 @@ public class User {
     @Column(nullable=false, length=50)
     private String email;
 
-    @ColumnDefault("'user'")
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private RoleType role;
 
     @CreationTimestamp //시간이 자동 입력
     private Timestamp createDate;

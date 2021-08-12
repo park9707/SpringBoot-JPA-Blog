@@ -22,7 +22,7 @@ public class Reply {
     @Column(nullable=false, length=200)
     private String content;
 
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="boardId")
     private Board board;
 
