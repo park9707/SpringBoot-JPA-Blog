@@ -4,12 +4,14 @@ import com.cos.blog.model.RoleType;
 import com.cos.blog.model.User;
 import com.cos.blog.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -18,6 +20,34 @@ public class DummyControllerTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    @DeleteMapping("/dummy/user/{id}")
+    public String delete(@PathVariable int id){
+        try{
+        userRepository.deleteById(id);
+        }catch(EmptyResultDataAccessException e){
+            return "삭제에 실패하였습니다. 해당 id는 존재하지 않습니다.";
+        }
+
+        return "삭제되었습니다. id : "+id;
+    }
+
+    @Transactional
+    @PutMapping("/dummy/user/{id}")
+    public User updateUser(@PathVariable int id, @RequestBody User requestUser){
+        System.out.println("id : "+id);
+        System.out.println("password : "+requestUser.getPassword());
+        System.out.println("email : "+requestUser.getEmail());
+
+        User user = userRepository.findById(id).orElseThrow(()->{
+            return new IllegalArgumentException("수정에 실패하였습니다.");
+        });
+
+        user.setPassword(requestUser.getPassword());
+        user.setEmail(requestUser.getEmail());
+
+        return null;
+    }
 
     @GetMapping("/dummy/users")
     public List<User> list(){
@@ -37,7 +67,7 @@ public class DummyControllerTest {
         User user = userRepository.findById(id).orElseThrow(new Supplier<IllegalArgumentException>() {
             @Override
             public IllegalArgumentException get() {
-                return new IllegalArgumentException("해당 유저는 없습니다. id : "+id);
+                return new IllegalArgumentException("해당 사용자가 없습니다. id : "+id);
             }
         });
         return user;
