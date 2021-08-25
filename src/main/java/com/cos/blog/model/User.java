@@ -32,6 +32,8 @@ public class User {
     @Enumerated(EnumType.STRING)
     private RoleType role;
 
+    private String oauth; // kakao 로그인 한사람은 kakao가 들어오게, 일반 사용자는 null
+
     @CreationTimestamp //시간이 자동 입력
     private Timestamp createDate;
 }
