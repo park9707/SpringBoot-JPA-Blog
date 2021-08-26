@@ -1,5 +1,6 @@
 package com.cos.blog.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -35,7 +36,9 @@ public class Board {
     private User user;
 
     @OneToMany(mappedBy="board",fetch=FetchType.EAGER)
-    private List<Reply> reply;
+    @JsonIgnoreProperties({"board"}) // 무한참조 해결
+    @OrderBy("id desc") // 아이디 기준 내림차순으로 정렬
+    private List<Reply> replys;
 
     @CreationTimestamp
     private Timestamp createDate;
