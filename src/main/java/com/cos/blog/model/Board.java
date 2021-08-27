@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -35,7 +34,7 @@ public class Board {
     @JoinColumn(name="userId")
     private User user;
 
-    @OneToMany(mappedBy="board",fetch=FetchType.EAGER)
+    @OneToMany(mappedBy="board",fetch=FetchType.EAGER,cascade = CascadeType.REMOVE) // cascade 게시글을 지울 때 댓글도 다 지워버리겠다는것
     @JsonIgnoreProperties({"board"}) // 무한참조 해결
     @OrderBy("id desc") // 아이디 기준 내림차순으로 정렬
     private List<Reply> replys;
